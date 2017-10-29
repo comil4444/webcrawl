@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 public class HtmlParser {
 	public static String getHtmlContent(URL url, String encode) {
 		StringBuffer contentBuffer = new StringBuffer();
-
+		
 		int responseCode = -1;
 		HttpURLConnection con = null;
 		try {
@@ -27,7 +27,7 @@ public class HtmlParser {
 			con.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 			con.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
 			con.setRequestProperty("Accept-Encoding", "gzip, deflate");
-			con.setRequestProperty("Cookie", "__jsluid=e30f13702d541685d6049a7db901090a; __jsl_clearance=1509286637.093|0|VZuxbbXXcFOWX2q66I3%2BEvGcf2I%3D");
+			con.setRequestProperty("Cookie", "__jsluid=e30f13702d541685d6049a7db901090a; JSESSIONID=B8EEFD39FF5F4A25EECB918C77FFE2C7; bdshare_firstime=1509286643559; __jsl_clearance=1509290423.178|0|UO%2BylOvfx8j2z85PtwxxB3nnOdI%3D");
 			con.setRequestProperty("Upgrade-Insecure-Requests", "1");
 			con.setRequestProperty("Connection", "keep-alive");
 			con.setConnectTimeout(60000);
@@ -47,7 +47,7 @@ public class HtmlParser {
 			}
 
 			InputStream inStr = con.getInputStream();
-			
+						
 			GZIPInputStream ungzip = new GZIPInputStream(inStr);  
 			InputStreamReader istreamReader = new InputStreamReader(ungzip, encode);
 			BufferedReader buffStr = new BufferedReader(istreamReader);
@@ -79,19 +79,23 @@ public class HtmlParser {
 		}
 	}
 	
-	public static List<String> getElementsById(String url){
-		List<String> list = new ArrayList<String>();
-		
-		String contentStr = getHtmlContent(url,"utf-8");
-		
-		Document doc = Jsoup.parse(contentStr);
-		Element e = doc.getElementById("concern");
-		return list;
+	public static Document getHtmlContent(String url) {
+		Document doc = null;
+		if (!url.toLowerCase().startsWith("http://")) {
+			url = "http://" + url;
+		}
+		try {
+			URL rUrl = new URL(url);
+			String content =  getHtmlContent(rUrl, "utf-8");
+			return Jsoup.parse(content);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
-	
 	public static void main(String argsp[]){
-		//System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm?flag=true","utf-8")) ;
-		getElementsById("www.cnvd.org.cn/flaw/list.htm?flag=true");
+		//System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm?flag=true")) ;
+		//getElementsById("www.cnvd.org.cn/flaw/list.htm?flag=true","concern");
 	}
 }

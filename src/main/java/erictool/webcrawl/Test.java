@@ -1,34 +1,46 @@
 package erictool.webcrawl;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import java.util.Set;
+
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import com.gargoylesoftware.htmlunit.util.Cookie;
+
+import javax.script.ScriptEngine; 
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 public class Test {
 
-    public static void main(String[] args) {  
-        // TODO Auto-generated method stub  
-        WebDriver driver=new HtmlUnitDriver();  
-        //打开百度首页  
-        driver.get("http://www.baidu.com/");  
-        //打印页面标题  
-        System.out.println("页面标题："+driver.getTitle());  
-        //根据id获取页面元素输入框  
-        WebElement search=driver.findElement(By.id("kw"));  
-        //在id=“kw”的输入框输入“selenium”  
-        search.sendKeys("selenium");  
-        //根据id获取提交按钮  
-        WebElement submit=driver.findElement(By.id("su"));  
-        //点击按钮查询  
-        submit.click();  
-        //打印当前页面标题  
-        System.out.println("页面标题："+driver.getTitle());  
-        //返回当前页面的url  
-        System.out.println("页面url："+driver.getCurrentUrl());  
-        //返回当前的浏览器的窗口句柄  
-        System.out.println("窗口句柄："+driver.getWindowHandle());  
-  
-    } 
+	public static void main(String[] args) {
+        HtmlUnitDriver driver = new HtmlUnitDriver();
+        //必须设置为true,才能执行js代码
+        driver.setJavascriptEnabled(true);
+        driver.get("http://www.cnvd.org.cn/");
+        Set<org.openqa.selenium.Cookie> cookies = driver.manage().getCookies();
+        for (org.openqa.selenium.Cookie cookie:cookies){
+            System.out.println(cookie);
+        }
+        driver.setJavascriptEnabled(false);
+        driver.get("http://www.cnvd.org.cn/flaw/show/CNVD-2017-30496");
+        String pageSource = driver.getPageSource();
+        System.out.println(pageSource);
+        
+        String js=pageSource.trim().replace("<script>", "").replace("</script>", "").replace("eval(y.replace(/\\b\\w+\\b/g, function(y){return x[f(y,z)-1]}))","y.replace(/\\b\\w+\\b/g, function(y){return x[f(y,z)-1]})");
+		
+        System.out.println(js);
+        
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("javascript");
+        String target = null;
+        try {
+        		target = (String) engine.eval(js);
+        }catch(ScriptException e) {
+        		e.printStackTrace();
+        }
+        System.out.println(target);
+        
+        
+    }
 
 }

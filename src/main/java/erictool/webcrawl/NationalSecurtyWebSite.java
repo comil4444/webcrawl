@@ -32,7 +32,13 @@ public class NationalSecurtyWebSite {
 		Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
 		Map<String,String> content = new HashMap<String,String>();
 		
+		if(url.equals("www.cnvd.org.cn/flaw/show/CNVD-2017-31960"))
+			System.out.print("");
+		
 		Document doc = HtmlParser.getHtmlContent(url);
+		
+		if(doc == null)
+			return map;
 		
 		String title = doc.getElementsByTag("h1").text();
 		

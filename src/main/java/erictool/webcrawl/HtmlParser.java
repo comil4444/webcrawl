@@ -6,34 +6,38 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class HtmlParser {
-	public static String getHtmlContent(URL url, String encode) {
+	public static String COOKIE = "__jsluid=60af3e04f8331df9ac22b344f32727d4; JSESSIONID=94CFFA37EA4F962E0FFCCC345FDAB280; bdshare_firstime=1509350290507; __jsl_clearance=1509353941.075|0|hNp8ahF4OnaUg%2B5Z5LXURHhDXEI%3D";
+	
+	public static String getHtmlContent(URL url, String encode) throws InterruptedException {
 		StringBuffer contentBuffer = new StringBuffer();
+		
 		
 		int responseCode = -1;
 		HttpURLConnection con = null;
+		
+		InputStream inStr = null;
+		GZIPInputStream ungzip = null;
 		try {
 			con = (HttpURLConnection) url.openConnection();
-			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0");// IE代理进行下载
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");// IE代理进行下载
 			con.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-			con.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
+			con.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6");
 			con.setRequestProperty("Accept-Encoding", "gzip, deflate");
-			con.setRequestProperty("Cookie", "__jsluid=e30f13702d541685d6049a7db901090a; JSESSIONID=B8EEFD39FF5F4A25EECB918C77FFE2C7; bdshare_firstime=1509286643559; __jsl_clearance=1509290423.178|0|UO%2BylOvfx8j2z85PtwxxB3nnOdI%3D");
+			con.setRequestProperty("Cookie", COOKIE);
 			con.setRequestProperty("Upgrade-Insecure-Requests", "1");
 			con.setRequestProperty("Connection", "keep-alive");
 			con.setConnectTimeout(60000);
 			con.setReadTimeout(60000);
 			// 获得网页返回信息码
+			
 			responseCode = con.getResponseCode();
+
 			if (responseCode == -1) {
 				System.out.println(url.toString() + " : connection is failure...");
 				con.disconnect();
@@ -46,21 +50,34 @@ public class HtmlParser {
 				return null;
 			}
 
-			InputStream inStr = con.getInputStream();
+			inStr = con.getInputStream();
+			
+			Thread.currentThread().sleep(1000l);
 						
-			GZIPInputStream ungzip = new GZIPInputStream(inStr);  
+			ungzip = new GZIPInputStream(inStr,8192);  
 			InputStreamReader istreamReader = new InputStreamReader(ungzip, encode);
 			BufferedReader buffStr = new BufferedReader(istreamReader);
 
 			String str = null;
 			while ((str = buffStr.readLine()) != null)
 				contentBuffer.append(str);
-			inStr.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			contentBuffer = null;
 			System.out.println("error: " + url.toString());
 		} finally {
+			try {
+				ungzip.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				inStr.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			con.disconnect();
 		}
 		return contentBuffer.toString();
@@ -95,7 +112,7 @@ public class HtmlParser {
 	}
 	
 	public static void main(String argsp[]){
-		//System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm?flag=true")) ;
+		System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm?flag=true")) ;
 		//getElementsById("www.cnvd.org.cn/flaw/list.htm?flag=true","concern");
 	}
 }

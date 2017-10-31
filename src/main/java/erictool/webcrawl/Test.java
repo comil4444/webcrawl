@@ -2,6 +2,7 @@ package erictool.webcrawl;
 
 import java.util.Set;
 
+import org.jsoup.nodes.Document;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import com.gargoylesoftware.htmlunit.util.Cookie;
@@ -18,8 +19,12 @@ public class Test {
         driver.setJavascriptEnabled(true);
         driver.get("http://www.cnvd.org.cn/");
         Set<org.openqa.selenium.Cookie> cookies = driver.manage().getCookies();
+        String uid = "";
+        String clear = "";
         for (org.openqa.selenium.Cookie cookie:cookies){
             System.out.println(cookie);
+            System.out.println(cookie.toString().substring(0, cookie.toString().indexOf(";")));
+            uid = cookie.toString().substring(0, cookie.toString().indexOf(";"));
         }
         driver.setJavascriptEnabled(false);
         driver.get("http://www.cnvd.org.cn/flaw/show/CNVD-2017-30496");
@@ -39,6 +44,15 @@ public class Test {
         		e.printStackTrace();
         }
         System.out.println(target);
+        String temp = target.substring(target.indexOf("__jsl"));
+        clear = temp.substring(0,temp.indexOf("'"));
+        System.out.println(temp.substring(0,temp.indexOf("'")));
+        
+        HtmlParser.COOKIE=uid+";"+clear;
+        System.out.println(uid+";"+clear+"--------------------");
+        Document doc = HtmlParser.getHtmlContent("http://www.cnvd.org.cn/flaw/list");
+        	
+        System.out.println(doc);
         
         
     }

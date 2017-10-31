@@ -12,8 +12,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class HtmlParser {
-	public static String COOKIE = "__jsluid=60af3e04f8331df9ac22b344f32727d4; JSESSIONID=94CFFA37EA4F962E0FFCCC345FDAB280; bdshare_firstime=1509350290507; __jsl_clearance=1509353941.075|0|hNp8ahF4OnaUg%2B5Z5LXURHhDXEI%3D";
 	
+	public static String COOKIE = "";
+
 	public static String getHtmlContent(URL url, String encode) throws InterruptedException {
 		StringBuffer contentBuffer = new StringBuffer();
 		

@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 
 public class HtmlParser {
 	
-	public static String COOKIE = "";
+	public static String COOKIE = "__jsluid=a58127e9df6a758024b3a13cc7e2bbbc; bdshare_firstime=1509334092973; __jsl_clearance=1509518929.668|0|dn1bGQvJ%2BuZKrVsLGpUZP4Rtkg8%3D; JSESSIONID=605D893F7DE2BC047E9DF15A4796FDF5";
 
 	public static String getHtmlContent(URL url, String encode) throws InterruptedException {
 		StringBuffer contentBuffer = new StringBuffer();
@@ -113,7 +113,7 @@ public class HtmlParser {
 	}
 	
 	public static void main(String argsp[]){
-		System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm?flag=true")) ;
+		System.out.println(getHtmlContent("www.cnvd.org.cn/flaw/list.htm")) ;
 		//getElementsById("www.cnvd.org.cn/flaw/list.htm?flag=true","concern");
 	}
 }

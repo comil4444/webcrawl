@@ -40,20 +40,11 @@ public class Test {
         String target = null;
         try {
         		target = (String) engine.eval(js);
+        		target=target.substring(target.indexOf("var cd"),target.indexOf("dc+=cd;")+7)+" dc;";
+        		System.out.println(target);
         }catch(ScriptException e) {
         		e.printStackTrace();
         }
-        System.out.println(target);
-        String temp = target.substring(target.indexOf("__jsl"));
-        clear = temp.substring(0,temp.indexOf("'"));
-        System.out.println(temp.substring(0,temp.indexOf("'")));
-        
-        HtmlParser.COOKIE=uid+";"+clear;
-        System.out.println(uid+";"+clear+"--------------------");
-        Document doc = HtmlParser.getHtmlContent("http://www.cnvd.org.cn/flaw/list");
-        	
-        System.out.println(doc);
-        
         
     }
 

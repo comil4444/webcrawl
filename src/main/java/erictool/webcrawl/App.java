@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +26,8 @@ public class App {
 		String content = cd.getPageSource();
 
 		Document doc = Jsoup.parse(content);
+		
+		System.out.println(content);
 
 		List<String> list = new ArrayList<String>();
 
@@ -61,6 +64,9 @@ public class App {
 		}
 		map.put(title, target);
 		System.out.println(map);
+		
+		for(Entry<String, Map<String, String>> entry:map.entrySet())
+			ExcelUtil.write2Excel("/Users/i323360/Desktop/webcrawl", entry.getKey(),entry.getValue() );
 		cd.close();
 	}
 }

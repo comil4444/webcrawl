@@ -5,68 +5,77 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-public class NationalSecurtyWebSite {
-	
-	public static String BASE_URL = "www.cnvd.org.cn";
-	public static String LIST_URL = "www.cnvd.org.cn/flaw/list.htm";
-	public static String CONTENT_URL_PREFIX = "/flaw/show/";
-	
-	public List<String> getPageContentUrl(Document doc,String prefix){
+public class NationalSecurtyWebSite implements HtmlParser {
+
+	public final static String BASE_URL = "http://www.cnvd.org.cn";
+	public final static String LIST_URL = "http://www.cnvd.org.cn/flaw/list.htm";
+	public final static String CONTENT_URL_PREFIX = "/flaw/show/";
+
+	public static String TARGET_FILE_DIR="/Users/i323360/Desktop/webcrawl";
+	public static String CHROME_DRIVER_PATH="/Users/i323360/Downloads/chromedriver";
+
+	public ChromeDriver cd = null;
+
+	public NationalSecurtyWebSite() {
+		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+		this.cd = new ChromeDriver();
+	}
+
+	public List<String> getListWebSites(String url) {
+		cd.get(url);
+		cd.get(url);
+
+		String content = cd.getPageSource();
+		Document doc = Jsoup.parse(content);
+
 		List<String> list = new ArrayList<String>();
-		
+
 		List<Element> elements = doc.getElementsByTag("a");
-		for(Element e:elements) {
-			if(e.attr("href").startsWith(prefix)) {
+		for (Element e : elements) {
+			if (e.attr("href").startsWith("/flaw/show/")) {
 				list.add(e.attr("href"));
 			}
 		}
-		
+		System.out.println(list);
 		return list;
 	}
-	
-	public Map<String,Map<String,String>> getListContent(String url){
-		Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
-		Map<String,String> content = new HashMap<String,String>();
+
+	public Map<String, Map<String, String>> getWebContent(String url) {
+
+		Map<String, String> target = new HashMap<String, String>();
+		Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
 		
-		Document doc = HtmlParser.getHtmlContent(url);
-		
-		if(doc == null)
-			return map;
-		
+		cd.get(url);
+
+		String content = cd.getPageSource();
+		Document doc = Jsoup.parse(content);
+
 		String title = doc.getElementsByTag("h1").text();
-		
+
 		Elements trs = doc.getElementsByTag("tr");
-		for(int i=0;i<trs.size()-2;i++) {
+		for (int i = 0; i < trs.size() - 2; i++) {
 			String left = "";
 			String right = "";
-			for(Element td:trs.get(i).children()) {
-				if(td.attr("colspan").equals("2"))
+			for (Element td : trs.get(i).children()) {
+				if (td.attr("colspan").equals("2"))
 					break;
-				if(td.siblingIndex()%3==1)
+				if (td.siblingIndex() % 3 == 1)
 					left = td.text();
 				else
 					right = td.text();
 			}
-			if(left !="")
-				content.put(left, right);
+			if (left != "")
+				target.put(left, right);
 		}
-		map.put(title, content);
+		map.put(title, target);
+		System.out.println(map);
 		return map;
-	}
-
-	public static void main(String[] args) {
-		Document d = HtmlParser.getHtmlContent("www.cnvd.org.cn/flaw/list.htm");
-		NationalSecurtyWebSite webSite = new NationalSecurtyWebSite();
-		List<String> urls = webSite.getPageContentUrl(d, CONTENT_URL_PREFIX);
-		for(String url:urls) {
-			Map<String,Map<String,String>> temp = webSite.getListContent(BASE_URL+url);
-			System.out.println(temp);
-		}
-
 	}
 
 }

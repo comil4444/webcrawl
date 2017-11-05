@@ -2,8 +2,10 @@ package erictool.webcrawl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,9 +18,13 @@ public class NationalSecurtyWebSite implements HtmlParser {
 	public final static String BASE_URL = "http://www.cnvd.org.cn";
 	public final static String LIST_URL = "http://www.cnvd.org.cn/flaw/list.htm";
 	public final static String CONTENT_URL_PREFIX = "/flaw/show/";
+	public final static String NEXT_PAGE_URL = "http://www.cnvd.org.cn/flaw/list.htm?max=20&offset=";
 
 	public static String TARGET_FILE_DIR="/Users/i323360/Desktop/webcrawl";
 	public static String CHROME_DRIVER_PATH="/Users/i323360/Downloads/chromedriver";
+	public static int PAGESIZE = 20;
+	
+	public static Set<String> urlList = new HashSet<String>();
 
 	public ChromeDriver cd = null;
 
@@ -35,8 +41,10 @@ public class NationalSecurtyWebSite implements HtmlParser {
 		Document doc = Jsoup.parse(content);
 
 		List<String> list = new ArrayList<String>();
-
-		List<Element> elements = doc.getElementsByTag("a");
+		
+		Element table = doc.getElementsByClass("tlist").get(0);
+		
+		List<Element> elements = table.getElementsByTag("a");
 		for (Element e : elements) {
 			if (e.attr("href").startsWith("/flaw/show/")) {
 				list.add(e.attr("href"));

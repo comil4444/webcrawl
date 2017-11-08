@@ -112,11 +112,11 @@ public class UIMain {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (StringUtils.isBlank(chromePath.getText()) || StringUtils.isBlank(filePath.getText())) {
+				if (chromePath.getText() ==null || chromePath.getText().equals("") || filePath.getText()==null || filePath.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "路径有误！");
 					return;
 				}
-				int day = StringUtils.isBlank(jtf.getText()) ? DEFAULT_DAY : Integer.valueOf(jtf.getText());
+				int day = (jtf.getText()==null || jtf.getText().equals("")) ? DEFAULT_DAY : Integer.valueOf(jtf.getText());
 				Calendar c = Calendar.getInstance();
 				c.add(Calendar.DATE, -day);
 				Date deadline = c.getTime();

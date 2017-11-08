@@ -47,12 +47,4 @@ public class ExcelUtil {
 		}
 		return file;
 	}
-	
-	public static void main(String[] args) {
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("asdf", "adf");
-		map.put("asdf2", "adf");
-		map.put("asdf3", "adf");
-		write2Excel("/Users/i323360/Desktop/webcrawl","test2",map);
-	}
 }

@@ -121,6 +121,7 @@ public class UIMain {
 				c.add(Calendar.DATE, -day);
 				Date deadline = c.getTime();
 				webcrawl(new NationalSecurtyWebSite(), deadline, 0);
+				JOptionPane.showMessageDialog(null, "爬取完成！！");
 			}
 
 		});

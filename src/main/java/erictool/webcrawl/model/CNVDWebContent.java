@@ -7,19 +7,25 @@ import java.util.List;
 public class CNVDWebContent {
 	
 	public enum Category{
-		WEB_APPLICATION("WEB应用",1),SECURITY_PRODUCT("安全产品",2),APPLICATION("应用软件",3),
-		OPERATION_SYSTEM("操作系统",4),DATABASE("数据库",5),WEB_EQUIPMENT("网络设备",6);
+		WEB_APPLICATION("WEB应用",1,"http://www.cnvd.org.cn/flaw/typelist?typeId=29"),SECURITY_PRODUCT("安全产品",2,"http://www.cnvd.org.cn/flaw/typelist?typeId=32"),APPLICATION("应用软件",3,"http://www.cnvd.org.cn/flaw/typelist?typeId=28"),
+		OPERATION_SYSTEM("操作系统",4,"http://www.cnvd.org.cn/flaw/typelist?typeId=27"),DATABASE("数据库",5,"http://www.cnvd.org.cn/flaw/typelist?typeId=30"),WEB_EQUIPMENT("网络设备",6,"http://www.cnvd.org.cn/flaw/typelist?typeId=31");
 		
 		private String name;
 		private int code;
+		private String url;
 		
-		Category(String name,int code){
+		Category(String name,int code,String url){
 			this.name = name;
 			this.code = code;
+			this.url = url;
 		}
 		
 		public String getName() {
-			return this.getName();
+			return this.name;
+		}
+		
+		public String getUrl() {
+			return this.url;
 		}
 	}
 	

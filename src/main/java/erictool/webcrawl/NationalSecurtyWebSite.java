@@ -13,6 +13,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import erictool.webcrawl.model.CNVDWebContent;
+
 public class NationalSecurtyWebSite implements HtmlParser {
 
 	public final static String BASE_URL = "http://www.cnvd.org.cn";
@@ -22,6 +24,7 @@ public class NationalSecurtyWebSite implements HtmlParser {
 
 	public static String TARGET_FILE_DIR="/Users/i323360/Desktop/webcrawl";
 	public static String CHROME_DRIVER_PATH="/Users/i323360/Downloads/chromedriver";
+	public static String PAGE_POST = "?max=20&offset=";
 	public static int PAGESIZE = 20;
 	
 	public static Set<String> urlList = new HashSet<String>();
@@ -84,6 +87,10 @@ public class NationalSecurtyWebSite implements HtmlParser {
 		map.put(title, target);
 		System.out.println(map);
 		return map;
+	}
+
+	public List<CNVDWebContent> getCNVDWebContent(String url) {
+		return null;
 	}
 
 }

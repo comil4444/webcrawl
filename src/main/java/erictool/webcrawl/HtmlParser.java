@@ -1,5 +1,6 @@
 package erictool.webcrawl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,6 @@ public interface HtmlParser {
 	
 	Map<String,Map<String,String>> getWebContent(String url);
 	
-	List<CNVDWebContent> getCNVDWebContent(String url);
+	List<CNVDWebContent> getCNVDWebContent(int offset,Date deadline);
 	
 }

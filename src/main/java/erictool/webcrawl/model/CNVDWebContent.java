@@ -7,8 +7,8 @@ import java.util.List;
 public class CNVDWebContent {
 	
 	public enum Category{
-		WEB_APPLICATION("WEB应用",1,"http://www.cnvd.org.cn/flaw/typelist?typeId=29"),SECURITY_PRODUCT("安全产品",2,"http://www.cnvd.org.cn/flaw/typelist?typeId=32"),APPLICATION("应用软件",3,"http://www.cnvd.org.cn/flaw/typelist?typeId=28"),
-		OPERATION_SYSTEM("操作系统",4,"http://www.cnvd.org.cn/flaw/typelist?typeId=27"),DATABASE("数据库",5,"http://www.cnvd.org.cn/flaw/typelist?typeId=30"),WEB_EQUIPMENT("网络设备",6,"http://www.cnvd.org.cn/flaw/typelist?typeId=31");
+		WEB_APPLICATION("WEB应用",1,"http://www.cnvd.org.cn/flaw/typeResult?typeId=29"),SECURITY_PRODUCT("安全产品",2,"http://www.cnvd.org.cn/flaw/typeResult?typeId=32"),APPLICATION("应用软件",3,"http://www.cnvd.org.cn/flaw/typeResult?typeId=28"),
+		OPERATION_SYSTEM("操作系统",4,"http://www.cnvd.org.cn/flaw/typeResult?typeId=27"),DATABASE("数据库",5,"http://www.cnvd.org.cn/flaw/typeResult?typeId=30"),WEB_EQUIPMENT("网络设备",6,"http://www.cnvd.org.cn/flaw/typeResult?typeId=31");
 		
 		private String name;
 		private int code;
@@ -37,6 +37,7 @@ public class CNVDWebContent {
 			this.add("情报来源");
 			this.add("CNVD ID");
 			this.add("CVE ID");
+			this.add("威胁等级");
 			this.add("内容");
 			this.add("漏洞类别");
 			this.add("影响产品");
@@ -45,11 +46,13 @@ public class CNVDWebContent {
 		}
 	};
 
-	private Date reportDate;
+	private String reportDate;
 	private String title;
 	private String fromSource;
 	private String cnvdID;
 	private String cveID;
+	private String threatLevel;
+
 	private String content;
 	private Category category;
 	private String affectedProduct;
@@ -57,11 +60,11 @@ public class CNVDWebContent {
 	private String recommandSolution;
 	
 	
-	public Date getReportDate() {
+	public String getReportDate() {
 		return reportDate;
 	}
-	public void setReportDate(Date reportDate) {
-		this.reportDate = reportDate;
+	public void setReportDate(String value) {
+		this.reportDate = value;
 	}
 	public String getTitle() {
 		return title;
@@ -116,6 +119,13 @@ public class CNVDWebContent {
 	}
 	public void setRecommandSolution(String recommandSolution) {
 		this.recommandSolution = recommandSolution;
+	}
+	
+	public String getThreatLevel() {
+		return threatLevel;
+	}
+	public void setThreatLevel(String threatLevel) {
+		this.threatLevel = threatLevel;
 	}
 	
 }

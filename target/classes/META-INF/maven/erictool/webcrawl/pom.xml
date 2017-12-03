@@ -9,10 +9,15 @@
 
 	<name>webcrawl</name>
 	<url>http://maven.apache.org</url>
-
+<!-- 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<exec.mainClass>erictool.webcrawl.UIMain</exec.mainClass>
+	</properties>
+ -->	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<exec.mainClass>erictool.webcrawl.UIMainVersion2</exec.mainClass>
 	</properties>
 
 	<build>

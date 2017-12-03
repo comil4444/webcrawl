@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,14 +28,16 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class UIMain {
+import erictool.webcrawl.model.CNVDWebContent;
+
+public class UIMainVersion2 {
 
 	public static int JTEXT_WIDTH = 30;
 	public static Date DATE_NOW = new Date();
 	public static int DEFAULT_DAY = 7;
 
 	public static void main(String[] args) {
-		JFrame jf = new JFrame("爬蟲程序");
+		JFrame jf = new JFrame("爬虫Version2");
 		GridLayout gy = new GridLayout(3, 1);
 		jf.setLayout(gy);
 
@@ -42,6 +45,7 @@ public class UIMain {
 		final JTextField chromePath = new JTextField();
 		chromePath.setEditable(false);
 		chromePath.setColumns(JTEXT_WIDTH);
+		chromePath.setText(NationalSecurtyWebSite.CHROME_DRIVER_PATH);
 		JButton chromeButton = new JButton("选择ChromeDriver文件：");
 		chromeButton.addActionListener(new ActionListener() {
 
@@ -57,6 +61,8 @@ public class UIMain {
 					}
 
 					chromePath.setText(jf.getSelectedFile().getAbsolutePath());
+					if(!NationalSecurtyWebSite.CHROME_DRIVER_PATH.equals(jf.getSelectedFile().getAbsolutePath()))
+						PropertyUtil.setProp("CHROME_DRIVER_PATH", jf.getSelectedFile().getAbsolutePath());
 					NationalSecurtyWebSite.CHROME_DRIVER_PATH = chromePath.getText();
 				}
 			}
@@ -69,6 +75,7 @@ public class UIMain {
 		final JTextField filePath = new JTextField();
 		filePath.setEditable(false);
 		filePath.setColumns(JTEXT_WIDTH);
+		filePath.setText(NationalSecurtyWebSite.TARGET_FILE_DIR);
 		JButton filePathButton = new JButton("請選擇保存文件路徑：");
 		filePathButton.addActionListener(new ActionListener() {
 
@@ -83,6 +90,8 @@ public class UIMain {
 						return;
 					}
 					filePath.setText(jf.getSelectedFile().getAbsolutePath());
+					if(!NationalSecurtyWebSite.TARGET_FILE_DIR.equals(jf.getSelectedFile().getAbsolutePath()))
+						PropertyUtil.setProp("TARGET_FILE_DIR", jf.getSelectedFile().getAbsolutePath());
 					NationalSecurtyWebSite.TARGET_FILE_DIR = filePath.getText();
 				}
 			}
@@ -120,7 +129,7 @@ public class UIMain {
 				Calendar c = Calendar.getInstance();
 				c.add(Calendar.DATE, -day);
 				Date deadline = c.getTime();
-				webcrawl(new NationalSecurtyWebSite(), deadline, 0);
+				cnvdWebcrawl(new NationalSecurtyWebSite(), deadline);
 				JOptionPane.showMessageDialog(null, "爬取完成！！");
 			}
 
@@ -134,6 +143,7 @@ public class UIMain {
 		jf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
+				NationalSecurtyWebSite.cd.close();
 				System.exit(0);
 			}
 		});
@@ -143,58 +153,14 @@ public class UIMain {
 		jf.setResizable(false);
 	}
 
-	protected static void webcrawl(NationalSecurtyWebSite nationalSecurtyWebSite,Date deadline,int offset) {
-		String targetUrl = NationalSecurtyWebSite.NEXT_PAGE_URL+offset;
-		System.out.println("targetUrl:"+targetUrl);
+	protected static void webcrawl(NationalSecurtyWebSite nationalSecurtyWebSite,Date deadline,int offset,List<CNVDWebContent> list) {
 		
-		List<String> urls = nationalSecurtyWebSite.getListWebSites(targetUrl);
-		urls.removeAll(NationalSecurtyWebSite.urlList);
-		NationalSecurtyWebSite.urlList.addAll(urls);
-		
-		System.out.println("Total URL is:"+urls.size());
-		for(String url:urls) {
-			Map<String,Map<String,String>> data = nationalSecurtyWebSite.getWebContent(url);
-			try {
-				boolean isBlank = checkData(data);
-				while(isBlank) {
-					Thread.sleep(300000l);
-					data = nationalSecurtyWebSite.getWebContent(NationalSecurtyWebSite.BASE_URL+url);
-					isBlank = checkData(data);
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				
-			for(Entry<String,Map<String,String>> entry:data.entrySet()) {
-				String title = entry.getKey();
-				
-				Map<String,String> content = entry.getValue();
-				Date reportDate = null;
-				try {
-					reportDate = new SimpleDateFormat("yyyy-MM-dd").parse(content.get("发布时间"));
-					System.out.println(reportDate);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(deadline.after(reportDate)) {
-					System.out.println("success!");
-					return;
-				}
-					
-				File file = ExcelUtil.write2Excel(NationalSecurtyWebSite.TARGET_FILE_DIR, title, content);
-				System.out.println(file.getName());
-			}
-		}
-		//next page
-		
-		webcrawl(nationalSecurtyWebSite,deadline,(offset+=20));
+		webcrawl(nationalSecurtyWebSite,deadline,(offset+=20),list);
 		
 		nationalSecurtyWebSite.cd.close();
-		NationalSecurtyWebSite.urlList.clear();
 		System.out.println("success!");
 	}
+	
 
 	private static boolean checkData(Map<String, Map<String, String>> data) {
 		for (Entry<String, Map<String, String>> entry : data.entrySet()) {
@@ -202,5 +168,12 @@ public class UIMain {
 				return true;
 		}
 		return false;
+	}
+	
+	private static void cnvdWebcrawl(NationalSecurtyWebSite nationalSecurtyWebSite, Date deadline) {
+		List<CNVDWebContent> list = nationalSecurtyWebSite.getCNVDWebContent(0, deadline);
+		ExcelUtil.write2Excel(NationalSecurtyWebSite.TARGET_FILE_DIR, NationalSecurtyWebSite.SYSTEM+"-"+NationalSecurtyWebSite.SDF.format(new Date()), list, CNVDWebContent.COLUMN_NAME);
+//		nationalSecurtyWebSite.cd.close();
+		System.out.println("success!");
 	}
 }

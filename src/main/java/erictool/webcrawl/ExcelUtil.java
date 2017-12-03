@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -28,7 +31,7 @@ public class ExcelUtil {
 		File file = new File(path, fileName + EXCEL_POSTFIX);
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			HSSFSheet sheet = wb.createSheet("爬蟲數據");
+			HSSFSheet sheet = wb.createSheet("爬虫数据");
 			sheet.setColumnWidth(0, 20 * 256);
 			sheet.setColumnWidth(1, 100 * 256);
 
@@ -81,19 +84,23 @@ public class ExcelUtil {
 		int rowIndex = COLUMN_NAME_INDEX+1;
 		for(CNVDWebContent content:datas) {
 			int columnIndex = 0;
-			Row row = sheet.createRow(rowIndex++);
-			row.createCell(columnIndex++).setCellValue(columnIndex);
+			Row row = sheet.createRow(rowIndex);
+			row.createCell(columnIndex++).setCellValue(rowIndex++);
 			row.createCell(columnIndex++).setCellValue(content.getReportDate());
 			row.createCell(columnIndex++).setCellValue(content.getTitle());
 			row.createCell(columnIndex++).setCellValue(content.getFromSource());
 			row.createCell(columnIndex++).setCellValue(content.getCnvdID());
 			row.createCell(columnIndex++).setCellValue(content.getCveID());
+			row.createCell(columnIndex++).setCellValue(content.getThreatLevel());
 			row.createCell(columnIndex++).setCellValue(content.getContent());
 			row.createCell(columnIndex++).setCellValue(content.getCategory().getName());
 			row.createCell(columnIndex++).setCellValue(content.getAffectedProduct());
 			row.createCell(columnIndex++).setCellValue(content.getAffectedProductVersion());
 			row.createCell(columnIndex++).setCellValue(content.getRecommandSolution());
 		}
+		//自适应宽度
+		for(int i=0;i<CNVDWebContent.COLUMN_NAME.size();i++)
+			sheet.autoSizeColumn(i);
 	}
 
 	private static void createSheetHead(HSSFSheet sheet, HSSFWorkbook wb, List<String> columnNames) {
@@ -105,13 +112,20 @@ public class ExcelUtil {
 		cs.setWrapText(true);
 		cs.setAlignment(HorizontalAlignment.LEFT);
 		cs.setFillBackgroundColor(HSSFColor.AQUA.index);
+		cs.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND); 
+		cs.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 		
 		//fill in data
 		Row columnRow = sheet.createRow(COLUMN_NAME_INDEX);
 		int index = 0;
 		for(String columnName:columnNames) {
-			columnRow.createCell(index++, CellType.STRING).setCellValue(columnName);
+			Cell cell = columnRow.createCell(index++, CellType.STRING);
+			cell.setCellValue(columnName);
+			cell.setCellStyle(cs);
 		}
-		columnRow.setRowStyle(cs);
 	}
 }

@@ -4,15 +4,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Date;
 import java.util.Properties;
 
 public class PropertyUtil {
 	
-	private static Properties prop = new Properties();
-
-	public static String getProp(String key) {
+	private static String fileName = "config.properties";
+	
+	public static String getProperties(String key) {
+		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream("./resource/config.properties"));
+			InputStream in = new FileInputStream(getConfigFilePath());
+			prop.load(in);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -23,14 +30,12 @@ public class PropertyUtil {
 		return prop.getProperty(key);
 	}
 	
-	public static void setProp(String key,String value) {
-		FileOutputStream oFile = null;
+	public static void setProperties(String key,String value) {
+		Properties prop = new Properties();
 		try {
-			oFile = new FileOutputStream("./resource/config.properties", true);
-			//true表示追加打开
+			OutputStream out = new FileOutputStream(getConfigFilePath());
 			prop.setProperty(key, value);
-			prop.store(oFile, "The New properties file");
-			oFile.close();
+			prop.store(out, "update"+new Date());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,4 +44,21 @@ public class PropertyUtil {
 			e.printStackTrace();
 		}
 	}
+
+	private static String getConfigFilePath() {
+		String path = "";
+		try {
+			path = URLDecoder.decode(PropertyUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+			path += fileName;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return path;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getConfigFilePath());
+	}
+
 }

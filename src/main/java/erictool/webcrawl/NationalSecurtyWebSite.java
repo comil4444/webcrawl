@@ -29,8 +29,8 @@ public class NationalSecurtyWebSite implements HtmlParser {
 	public final static String CONTENT_URL_PREFIX = "/flaw/show/";
 	public final static String NEXT_PAGE_URL = "http://www.cnvd.org.cn/flaw/list.htm?max=20&offset=";
 
-	public static String TARGET_FILE_DIR=PropertyUtil.getProp("TARGET_FILE_DIR");
-	public static String CHROME_DRIVER_PATH=PropertyUtil.getProp("CHROME_DRIVER_PATH");
+	public static String TARGET_FILE_DIR="";
+	public static String CHROME_DRIVER_PATH="";
 	public static String PAGE_POST = "&max=20&offset=";
 	public static int PAGESIZE = 20;
 	

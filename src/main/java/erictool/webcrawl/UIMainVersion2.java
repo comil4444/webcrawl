@@ -61,8 +61,6 @@ public class UIMainVersion2 {
 					}
 
 					chromePath.setText(jf.getSelectedFile().getAbsolutePath());
-					if(!NationalSecurtyWebSite.CHROME_DRIVER_PATH.equals(jf.getSelectedFile().getAbsolutePath()))
-						PropertyUtil.setProp("CHROME_DRIVER_PATH", jf.getSelectedFile().getAbsolutePath());
 					NationalSecurtyWebSite.CHROME_DRIVER_PATH = chromePath.getText();
 				}
 			}
@@ -90,8 +88,6 @@ public class UIMainVersion2 {
 						return;
 					}
 					filePath.setText(jf.getSelectedFile().getAbsolutePath());
-					if(!NationalSecurtyWebSite.TARGET_FILE_DIR.equals(jf.getSelectedFile().getAbsolutePath()))
-						PropertyUtil.setProp("TARGET_FILE_DIR", jf.getSelectedFile().getAbsolutePath());
 					NationalSecurtyWebSite.TARGET_FILE_DIR = filePath.getText();
 				}
 			}
@@ -143,7 +139,8 @@ public class UIMainVersion2 {
 		jf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
-				NationalSecurtyWebSite.cd.close();
+				if(NationalSecurtyWebSite.cd!=null)
+					NationalSecurtyWebSite.cd.close();
 				System.exit(0);
 			}
 		});

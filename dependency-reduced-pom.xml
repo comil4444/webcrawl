@@ -43,27 +43,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/maven-archiver/resources</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -75,7 +54,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <exec.mainClass>erictool.webcrawl.UIMainVersion2</exec.mainClass>
+    <exec.mainClass>erictool.webcrawl.controller.UIMainVersion2</exec.mainClass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

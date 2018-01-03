@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -21,8 +19,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import erictool.webcrawl.model.CNVDWebContent;
 import erictool.webcrawl.model.CNVDWebContent.Category;
 import erictool.webcrawl.service.HtmlParser;
+import erictool.webcrawl.util.PropertyUtil;
 
-public class NationalSecurtyWebSite implements HtmlParser {
+public class NationalSecurtyWebSite extends AbstractHtmlParser {
 
 	public final static String SYSTEM = "CNVD";
 	public final static String BASE_URL = "http://www.cnvd.org.cn";
@@ -30,19 +29,16 @@ public class NationalSecurtyWebSite implements HtmlParser {
 	public final static String CONTENT_URL_PREFIX = "/flaw/show/";
 	public final static String NEXT_PAGE_URL = "http://www.cnvd.org.cn/flaw/list.htm?max=20&offset=";
 
-	public static String TARGET_FILE_DIR="";
-	public static String CHROME_DRIVER_PATH="";
 	public static String PAGE_POST = "&max=20&offset=";
 	public static int PAGESIZE = 20;
 	
 	public final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public static Set<String> urlList = new HashSet<String>();
-
-	public static ChromeDriver cd = null;
-
+	public static String CONFIGDAY = "configCNVDDay";
+	public static String CONFIGCHECKED = "configCNVDchecked";
+	
 	public NationalSecurtyWebSite() {
-		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+		System.setProperty("webdriver.chrome.driver", PropertyUtil.getProperties(HtmlParser.CHROME_DRIVER_PATH));
 		if(this.cd==null)
 			this.cd = new ChromeDriver();
 	}

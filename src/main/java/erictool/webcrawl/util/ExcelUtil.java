@@ -59,11 +59,11 @@ public class ExcelUtil {
 		return file;
 	}
 
-	public static File write2Excel(String path, String fileName, List<CNVDWebContent> datas,List<String> columnNames) {
+	public static File write2Excel(String path, String sheetName,String fileName, List<CNVDWebContent> datas,List<String> columnNames) {
 		File file = new File(path, fileName + EXCEL_POSTFIX);
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			HSSFSheet sheet = wb.createSheet();
+			HSSFSheet sheet = wb.createSheet(sheetName);
 			
 			createSheetHead(sheet,wb,columnNames);
 			

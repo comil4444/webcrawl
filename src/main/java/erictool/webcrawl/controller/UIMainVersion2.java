@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import erictool.webcrawl.model.CNVDWebContent;
+import erictool.webcrawl.service.HtmlParser;
 import erictool.webcrawl.service.impl.NationalSecurtyWebSite;
 import erictool.webcrawl.util.ExcelUtil;
 import erictool.webcrawl.util.PropertyUtil;
@@ -41,7 +42,7 @@ public class UIMainVersion2 {
 		final JTextField chromePath = new JTextField();
 		chromePath.setEditable(false);
 		chromePath.setColumns(JTEXT_WIDTH);
-		chromePath.setText(PropertyUtil.getProperties("CHROME_DRIVER_PATH"));
+		chromePath.setText(PropertyUtil.getProperties(HtmlParser.CHROME_DRIVER_PATH));
 		JButton chromeButton = new JButton("选择ChromeDriver文件：");
 		chromeButton.addActionListener(new ActionListener() {
 
@@ -57,8 +58,7 @@ public class UIMainVersion2 {
 					}
 
 					chromePath.setText(jf.getSelectedFile().getAbsolutePath());
-					PropertyUtil.setProperties("CHROME_DRIVER_PATH", jf.getSelectedFile().getAbsolutePath());
-					NationalSecurtyWebSite.CHROME_DRIVER_PATH = chromePath.getText();
+					PropertyUtil.setProperties(HtmlParser.CHROME_DRIVER_PATH, jf.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -70,7 +70,7 @@ public class UIMainVersion2 {
 		final JTextField filePath = new JTextField();
 		filePath.setEditable(false);
 		filePath.setColumns(JTEXT_WIDTH);
-		filePath.setText(PropertyUtil.getProperties("TARGET_FILE_DIR"));
+		filePath.setText(PropertyUtil.getProperties(HtmlParser.TARGET_FILE_DIR));
 		JButton filePathButton = new JButton("請選擇保存文件路徑：");
 		filePathButton.addActionListener(new ActionListener() {
 
@@ -85,8 +85,7 @@ public class UIMainVersion2 {
 						return;
 					}
 					filePath.setText(jf.getSelectedFile().getAbsolutePath());
-					PropertyUtil.setProperties("TARGET_FILE_DIR", jf.getSelectedFile().getAbsolutePath());
-					NationalSecurtyWebSite.TARGET_FILE_DIR = filePath.getText();
+					PropertyUtil.setProperties(HtmlParser.TARGET_FILE_DIR, jf.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -147,7 +146,7 @@ public class UIMainVersion2 {
 			}
 		});
 		jf.setLocation(300, 300);
-		jf.setSize(700, 120);
+		jf.setSize(800, 400);
 		jf.setVisible(true);
 		jf.pack();
 		jf.setResizable(false);
@@ -164,8 +163,7 @@ public class UIMainVersion2 {
 	
 	private static void cnvdWebcrawl(NationalSecurtyWebSite nationalSecurtyWebSite, Date deadline) {
 		List<CNVDWebContent> list = nationalSecurtyWebSite.getCNVDWebContent(0, deadline);
-		ExcelUtil.write2Excel(NationalSecurtyWebSite.TARGET_FILE_DIR, NationalSecurtyWebSite.SYSTEM+"-"+NationalSecurtyWebSite.SDF.format(new Date()), list, CNVDWebContent.COLUMN_NAME);
-//		nationalSecurtyWebSite.cd.close();
+		ExcelUtil.write2Excel(PropertyUtil.getProperties(HtmlParser.TARGET_FILE_DIR), NationalSecurtyWebSite.SYSTEM,NationalSecurtyWebSite.SYSTEM+"-"+NationalSecurtyWebSite.SDF.format(new Date()), list, CNVDWebContent.COLUMN_NAME);
 		System.out.println("success!");
 	}
 }

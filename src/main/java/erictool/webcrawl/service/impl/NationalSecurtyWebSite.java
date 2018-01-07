@@ -34,6 +34,8 @@ public class NationalSecurtyWebSite extends AbstractHtmlParser {
 	
 	public final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 	
+	public static ChromeDriver cd = null;
+	
 	public static String CONFIGDAY = "configCNVDDay";
 	public static String CONFIGCHECKED = "configCNVDchecked";
 	

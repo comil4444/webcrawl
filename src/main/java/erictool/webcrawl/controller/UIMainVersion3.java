@@ -116,8 +116,8 @@ public class UIMainVersion3 extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
-				if(AbstractHtmlParser.cd!=null)
-					AbstractHtmlParser.cd.close();
+				if(NationalSecurtyWebSite.cd!=null)
+					NationalSecurtyWebSite.cd.close();
 				System.exit(0);
 			}
 		});
